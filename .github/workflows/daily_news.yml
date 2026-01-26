@@ -1,0 +1,68 @@
+name: 企业人才发展资讯每日推送
+
+on:
+  # 每天北京时间早上9点运行 (UTC时间凌晨1点)
+  schedule:
+    - cron: '0 1 * * *'
+
+  # 允许手动触发
+  workflow_dispatch:
+
+  # 代码推送时也运行（用于测试）
+  push:
+    branches:
+      - main
+
+jobs:
+  collect-and-push:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # 需要写权限来提交代码
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置Python环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 安装依赖
+        run: |
+          pip install -r requirements.txt
+
+      - name: 采集RSS资讯
+        run: |
+          cd src
+          python rss_collector.py
+
+      - name: 生成网页
+        run: |
+          cd src
+          python html_generator.py
+
+      - name: 发送邮件
+        env:
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
+        run: |
+          cd src
+          python email_sender.py
+
+      - name: 提交更新
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/ docs/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "🤖 自动更新: $(date +'%Y-%m-%d %H:%M:%S')" && git push)
+
+      - name: 部署到GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          publish_branch: gh-pages
+          commit_message: '🚀 更新网站 ${{ github.sha }}'
