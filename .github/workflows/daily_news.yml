@@ -11,7 +11,7 @@ on:
   # 代码推送时也运行（用于测试）
   push:
     branches:
-      - main
+      - master
 
 jobs:
   collect-and-push:
