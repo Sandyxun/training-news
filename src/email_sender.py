@@ -18,7 +18,9 @@ class EmailSender:
         self.smtp_port = EMAIL_CONFIG['smtp_port']
         self.sender_email = os.getenv('SENDER_EMAIL', '')
         self.sender_password = os.getenv('EMAIL_PASSWORD', '')  # Gmail应用专用密码
-        self.receiver_email = os.getenv('RECEIVER_EMAIL', '')
+        # 支持多个收件人，用逗号分隔
+        receiver_emails = os.getenv('RECEIVER_EMAIL', '')
+        self.receiver_emails = [email.strip() for email in receiver_emails.split(',') if email.strip()]
 
     def load_news_data(self):
         """
@@ -179,7 +181,7 @@ class EmailSender:
         发送邮件
         """
         # 验证配置
-        if not all([self.sender_email, self.sender_password, self.receiver_email]):
+        if not all([self.sender_email, self.sender_password, self.receiver_emails]):
             print("错误: 邮件配置不完整，请设置环境变量")
             print("需要设置: SENDER_EMAIL, EMAIL_PASSWORD, RECEIVER_EMAIL")
             return False
@@ -193,9 +195,9 @@ class EmailSender:
         try:
             # 创建邮件
             msg = MIMEMultipart('alternative')
-            msg['Subject'] = f"📚 培训行业每日资讯 - {datetime.now().strftime('%Y年%m月%d日')}"
+            msg['Subject'] = f"📚 企业人才发展每日资讯 - {datetime.now().strftime('%Y年%m月%d日')}"
             msg['From'] = self.sender_email
-            msg['To'] = self.receiver_email
+            msg['To'] = ', '.join(self.receiver_emails)  # 支持多个收件人
 
             # 生成HTML内容
             html_content = self.generate_html_email(news_data)
@@ -209,7 +211,7 @@ class EmailSender:
                 server.login(self.sender_email, self.sender_password)
                 server.send_message(msg)
 
-            print(f"✓ 邮件发送成功！发送到: {self.receiver_email}")
+            print(f"✓ 邮件发送成功！发送到: {', '.join(self.receiver_emails)}")
             return True
 
         except Exception as e:
