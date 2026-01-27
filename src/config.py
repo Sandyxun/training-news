@@ -5,9 +5,23 @@
 # RSSHub服务器地址（可选，如果官方实例不可用，可以自建或使用其他镜像）
 RSSHUB_BASE_URL = 'https://rsshub.app'  # RSSHub官方实例
 
-# RSS源配置 - 聚焦企业人才发展主题
+# RSS源配置 - 中英文混合，聚焦企业人才发展
 RSS_SOURCES = [
-    # === 专业人才发展源 ===
+    # === 中文源（直接RSS） ===
+    {
+        'name': 'FT中文网-管理',
+        'url': 'https://www.ftchinese.com/rss/management',
+        'category': '管理',
+        'description': '金融时报中文网-管理专题'
+    },
+    {
+        'name': 'FT中文网-商学院',
+        'url': 'https://www.ftchinese.com/rss/mba',
+        'category': '商学院',
+        'description': '金融时报中文网-MBA与商学院'
+    },
+
+    # === 专业人才发展源（英文） ===
     {
         'name': 'ATD (人才发展协会)',
         'url': 'https://www.td.org/rss-feeds/td-at-work',
@@ -25,20 +39,6 @@ RSS_SOURCES = [
         'url': 'https://www.chieflearningofficer.com/feed/',
         'category': '企业学习',
         'description': '首席学习官的专业内容'
-    },
-    {
-        'name': 'eLearning Industry',
-        'url': 'https://elearningindustry.com/feed',
-        'category': '企业学习',
-        'description': '企业在线学习与培训技术'
-    },
-
-    # === 商业管理精选 ===
-    {
-        'name': 'Harvard Business Review - Leadership',
-        'url': 'https://hbr.org/topic/leadership',
-        'category': '领导力发展',
-        'description': '哈佛商业评论-领导力专题'
     },
 ]
 
