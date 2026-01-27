@@ -133,8 +133,8 @@ class EmailSender:
         </head>
         <body>
             <div class="header">
-                <h1>📚 培训行业每日资讯</h1>
-                <p>今天也要关注教育行业动态哦 ~</p>
+                <h1>📚 企业人才发展每日资讯</h1>
+                <p>每天为你精选人才发展、培训管理相关内容</p>
             </div>
 
             <div class="stats">

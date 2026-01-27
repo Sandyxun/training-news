@@ -5,23 +5,9 @@
 # RSSHub服务器地址（可选，如果官方实例不可用，可以自建或使用其他镜像）
 RSSHUB_BASE_URL = 'https://rsshub.app'  # RSSHub官方实例
 
-# RSS源配置 - 企业人才发展相关（更可靠的源）
+# RSS源配置 - 聚焦企业人才发展主题
 RSS_SOURCES = [
-    # === 中文源（直接RSS，不依赖RSSHub） ===
-    {
-        'name': '知乎-企业管理话题',
-        'url': 'https://www.zhihu.com/rss',
-        'category': '企业管理',
-        'description': '知乎企业管理相关问答'
-    },
-    {
-        'name': '少数派',
-        'url': 'https://sspai.com/feed',
-        'category': '效率工具',
-        'description': '效率工具与工作方法'
-    },
-
-    # === 精选国际源（直接RSS） ===
+    # === 专业人才发展源 ===
     {
         'name': 'ATD (人才发展协会)',
         'url': 'https://www.td.org/rss-feeds/td-at-work',
@@ -29,16 +15,30 @@ RSS_SOURCES = [
         'description': '全球最大的人才发展协会'
     },
     {
-        'name': 'Harvard Business Review',
-        'url': 'https://hbr.org/feed',
-        'category': '商业管理',
-        'description': '哈佛商业评论'
-    },
-    {
         'name': 'Training Industry',
         'url': 'https://trainingindustry.com/feed/',
         'category': '培训产业',
-        'description': '企业培训与人才发展'
+        'description': '企业培训与人才发展专业资讯'
+    },
+    {
+        'name': 'Chief Learning Officer',
+        'url': 'https://www.chieflearningofficer.com/feed/',
+        'category': '企业学习',
+        'description': '首席学习官的专业内容'
+    },
+    {
+        'name': 'eLearning Industry',
+        'url': 'https://elearningindustry.com/feed',
+        'category': '企业学习',
+        'description': '企业在线学习与培训技术'
+    },
+
+    # === 商业管理精选 ===
+    {
+        'name': 'Harvard Business Review - Leadership',
+        'url': 'https://hbr.org/topic/leadership',
+        'category': '领导力发展',
+        'description': '哈佛商业评论-领导力专题'
     },
 ]
 
