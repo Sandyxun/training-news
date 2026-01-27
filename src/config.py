@@ -41,17 +41,20 @@ RSS_SOURCES = [
         'description': '企业培训与人才发展行业资讯'
     },
 
-    # === 想添加微信公众号？ ===
-    # 参考 WECHAT_RSSHUB_GUIDE.md 文档
-    # 或使用 src/wechat_helper.py 工具测试
-
-    # 示例：培训经理指南（需要替换实际的biz参数）
-    # {
-    #     'name': '培训经理指南',
-    #     'url': 'https://rsshub.app/wechat/mp/homepage/你的biz参数',
-    #     'category': '培训管理',
-    #     'description': '培训经理的实战指南'
-    # },
+    # === 微信公众号（通过RSSHub） ===
+    # 使用搜狗微信聚合的方式获取公众号文章
+    {
+        'name': '培训相关文章聚合',
+        'url': 'https://rsshub.app/sogou/weixin?query=企业培训',
+        'category': '培训资讯',
+        'description': '搜狗微信搜索-企业培训相关文章'
+    },
+    {
+        'name': '人才发展文章聚合',
+        'url': 'https://rsshub.app/sogou/weixin?query=人才发展',
+        'category': '人才发展',
+        'description': '搜狗微信搜索-人才发展相关文章'
+    },
 ]
 
 # 微信公众号配置（待添加biz参数）
