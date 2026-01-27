@@ -27,8 +27,8 @@ class RSSCollector:
                 print(f"警告: {source_name} RSS解析可能有问题")
 
             articles = []
-            # 获取最近24小时的文章
-            yesterday = datetime.now() - timedelta(days=1)
+            # 获取最近7天的文章（临时测试）
+            week_ago = datetime.now() - timedelta(days=7)
 
             for entry in feed.entries[:10]:  # 只取最新10条
                 try:
@@ -54,8 +54,8 @@ class RSSCollector:
                         'category': category,
                     }
 
-                    # 只添加最近24小时的文章
-                    if published and published >= yesterday:
+                    # 只添加最近7天的文章（临时测试）
+                    if published and published >= week_ago:
                         articles.append(article)
                     elif not published:  # 如果没有时间，也添加
                         articles.append(article)
