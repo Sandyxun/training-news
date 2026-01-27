@@ -5,29 +5,23 @@
 # RSSHub服务器地址（可选，如果官方实例不可用，可以自建或使用其他镜像）
 RSSHUB_BASE_URL = 'https://rsshub.app'  # RSSHub官方实例
 
-# RSS源配置 - 企业人才发展相关（中英文混合）
+# RSS源配置 - 企业人才发展相关（更可靠的源）
 RSS_SOURCES = [
-    # === 中文源（优先） ===
+    # === 中文源（直接RSS，不依赖RSSHub） ===
     {
-        'name': '36氪-企业服务',
-        'url': 'https://rsshub.app/36kr/news/latest',
-        'category': '企业资讯',
-        'description': '企业服务与管理相关新闻'
+        'name': '知乎-企业管理话题',
+        'url': 'https://www.zhihu.com/rss',
+        'category': '企业管理',
+        'description': '知乎企业管理相关问答'
     },
     {
-        'name': '人人都是产品经理-职场',
-        'url': 'https://rsshub.app/woshipm/popular',
-        'category': '职场管理',
-        'description': '职场与管理热门文章'
-    },
-    {
-        'name': '虎嗅-商业',
-        'url': 'https://rsshub.app/huxiu/article',
-        'category': '商业管理',
-        'description': '商业与管理深度文章'
+        'name': '少数派',
+        'url': 'https://sspai.com/feed',
+        'category': '效率工具',
+        'description': '效率工具与工作方法'
     },
 
-    # === 精选国际源（提供国际视野） ===
+    # === 精选国际源（直接RSS） ===
     {
         'name': 'ATD (人才发展协会)',
         'url': 'https://www.td.org/rss-feeds/td-at-work',
@@ -35,25 +29,16 @@ RSS_SOURCES = [
         'description': '全球最大的人才发展协会'
     },
     {
+        'name': 'Harvard Business Review',
+        'url': 'https://hbr.org/feed',
+        'category': '商业管理',
+        'description': '哈佛商业评论'
+    },
+    {
         'name': 'Training Industry',
         'url': 'https://trainingindustry.com/feed/',
         'category': '培训产业',
-        'description': '企业培训与人才发展行业资讯'
-    },
-
-    # === 微信公众号（通过RSSHub） ===
-    # 使用搜狗微信聚合的方式获取公众号文章
-    {
-        'name': '培训相关文章聚合',
-        'url': 'https://rsshub.app/sogou/weixin?query=企业培训',
-        'category': '培训资讯',
-        'description': '搜狗微信搜索-企业培训相关文章'
-    },
-    {
-        'name': '人才发展文章聚合',
-        'url': 'https://rsshub.app/sogou/weixin?query=人才发展',
-        'category': '人才发展',
-        'description': '搜狗微信搜索-人才发展相关文章'
+        'description': '企业培训与人才发展'
     },
 ]
 
