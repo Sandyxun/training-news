@@ -2,8 +2,9 @@ name: 企业人才发展资讯每日推送
 
 on:
   # 每天北京时间早上9点运行 (UTC时间凌晨1点)
+  # 更新于2026-01-29：重新激活scheduled workflow 
   schedule:
-    - cron: '0 1 * * *'
+    - cron: '0 1 * * *'   
 
   # 允许手动触发
   workflow_dispatch:
