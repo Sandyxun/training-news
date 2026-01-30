@@ -40,6 +40,18 @@ RSS_SOURCES = [
         'category': '企业学习',
         'description': '首席学习官的专业内容'
     },
+    {
+          'name': '培训公众号1',
+          'url': 'https://rsshub.app/wechat/mp/homepage/MjM5Njk5Mzk3Mg==',
+          'category': '培训行业',
+          'description': '微信公众号'
+      },
+      {
+          'name': '培训公众号2',
+          'url': 'https://rsshub.app/wechat/mp/homepage/MjM5Mjk2MDY2MA==',
+          'category': '培训行业',
+          'description': '微信公众号'
+      },
 ]
 
 # 微信公众号配置（待添加biz参数）
