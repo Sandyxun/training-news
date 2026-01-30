@@ -1,158 +1,63 @@
-"""
-  RSS采集器 - 优化版本
-"""
+ """
+  配置文件 - 企业人才发展资讯推送系统
+  """
 
-  import feedparser
-  import json
-  import os
-  from datetime import datetime, timedelta
-  from config import RSS_SOURCES, NEWS_FILE, DATA_DIR
-  import hashlib
-  import time
+  # RSSHub服务器地址
+  RSSHUB_BASE_URL = 'https://rsshub.app'
 
+  # RSS源配置
+RSS_SOURCES = [
+    {
+          'name': '36氪-企业服务',
+          'url': 'https://36kr.com/feed/enterprise',
+          'category': '企业服务',
+          'description': '36氪企业服务频道'
+    },
+    {
+          'name': '虎嗅-商业',
+          'url': 'https://www.huxiu.com/rss/0.xml',
+          'category': '商业',
+          'description': '虎嗅商业资讯'
+      },
+      {
+          'name': '人人都是产品经理',
+          'url': 'http://www.woshipm.com/feed',
+          'category': '产品管理',
+          'description': '产品与运营'
+      },
+      {
+          'name': 'Harvard Business Review',
+          'url': 'https://feeds.hbr.org/harvardbusiness',
+          'category': '管理',
+          'description': '哈佛商业评论'
+      },
+  ]
 
-  class RSSCollector:
-      def __init__(self):
-          self.sources = RSS_SOURCES
-          self.news_data = []
+  # 微信公众号配置
+  WECHAT_ACCOUNTS = [
+      '培训经理指南',
+      '培训江湖',
+      '培训杂志',
+      'ATD中国',
+  ]
 
-      def fetch_rss(self, url, source_name, category, timeout=15):
-          """
-          获取单个RSS源的内容（优化版）
-          """
-          try:
-              print(f"正在采集: {source_name}...")
+  # 邮件配置
+  EMAIL_CONFIG = {
+      'smtp_server': 'smtp.gmail.com',
+      'smtp_port': 587,
+      'sender_email': '',
+      'sender_password': '',
+      'receiver_email': '',
+  }
 
-              # 添加User-Agent避免被拦截
-              feed = feedparser.parse(url, request_headers={
-                  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-              })
+  # 时区设置
+  TIMEZONE = 'Asia/Shanghai'
 
-              # 检查HTTP状态
-              if hasattr(feed, 'status'):
-                  print(f"  HTTP状态: {feed.status}")
-                  if feed.status >= 400:
-                      print(f"✗ {source_name}: HTTP错误 {feed.status}")
-                      return []
+  # 网页配置
+  WEBSITE_TITLE = '企业人才发展每日资讯'
+  WEBSITE_DESCRIPTION = '每天早上9点更新，汇聚企业人才发展、组织学习、培训管理最新动态'
 
-              if feed.bozo:
-                  print(f"  警告: RSS解析有问题 - {feed.bozo_exception}")
-
-              if not feed.entries:
-                  print(f"✗ {source_name}: 没有找到文章")
-                  return []
-
-              articles = []
-              month_ago = datetime.now() - timedelta(days=30)
-
-              for entry in feed.entries[:20]:
-                  try:
-                      published = None
-                      if hasattr(entry, 'published_parsed') and entry.published_parsed:
-                          try:
-                              published = datetime(*entry.published_parsed[:6])
-                          except:
-                              pass
-                      elif hasattr(entry, 'updated_parsed') and entry.updated_parsed:
-                          try:
-                              published = datetime(*entry.updated_parsed[:6])
-                          except:
-                              pass
-
-                      if not published:
-                          published = datetime.now()
-
-                      article_id = hashlib.md5(f"{entry.link}".encode('utf-8')).hexdigest()
-
-                      summary = ''
-                      if hasattr(entry, 'summary'):
-                          summary = entry.summary
-                      elif hasattr(entry, 'description'):
-                          summary = entry.description
-
-                      import re
-                      summary = re.sub(r'<[^>]+>', '', summary)
-                      summary = summary.strip()[:300]
-
-                      article = {
-                          'id': article_id,
-                          'title': entry.title,
-                          'link': entry.link,
-                          'summary': summary,
-                          'published': published.isoformat(),
-                          'source': source_name,
-                          'category': category,
-                      }
-
-                      if published >= month_ago:
-                          articles.append(article)
-
-                  except Exception as e:
-                      print(f"  处理文章时出错: {str(e)}")
-                      continue
-
-              print(f"✓ {source_name}: 采集到 {len(articles)} 篇文章")
-              return articles
-
-          except Exception as e:
-              print(f"✗ {source_name} 采集失败: {str(e)}")
-              return []
-
-      def collect_all(self):
-          """
-          采集所有RSS源
-          """
-          print("=" * 50)
-          print("开始采集RSS源...")
-          print("=" * 50)
-
-          all_articles = []
-          for source in self.sources:
-              articles = self.fetch_rss(source['url'], source['name'], source['category'])
-              all_articles.extend(articles)
-              time.sleep(1)
-
-          unique_articles = {}
-          for article in all_articles:
-              if article['id'] not in unique_articles:
-                  unique_articles[article['id']] = article
-
-          self.news_data = sorted(unique_articles.values(), key=lambda x: x['published'], reverse=True)
-
-          print("=" * 50)
-          print(f"采集完成！共获取 {len(self.news_data)} 篇不重复的文章")
-          print("=" * 50)
-
-          return self.news_data
-
-      def save_to_file(self):
-          """
-          保存到JSON文件
-          """
-          os.makedirs(DATA_DIR, exist_ok=True)
-
-          data = {
-              'update_time': datetime.now().isoformat(),
-              'total': len(self.news_data),
-              'articles': self.news_data
-          }
-
-          with open(NEWS_FILE, 'w', encoding='utf-8') as f:
-              json.dump(data, f, ensure_ascii=False, indent=2)
-
-          print(f"数据已保存到: {NEWS_FILE}")
-
-
-  if __name__ == '__main__':
-      collector = RSSCollector()
-      articles = collector.collect_all()
-      collector.save_to_file()
-
-      if articles:
-          print("\n最新资讯预览:")
-          for i, article in enumerate(articles[:3], 1):
-              print(f"\n{i}. {article['title']}")
-              print(f"   来源: {article['source']} | 分类: {article['category']}")
-              print(f"   链接: {article['link']}")
-      else:
-          print("\n⚠️ 未采集到任何文章，请检查RSS源配置")
+  # 数据文件路径
+  DATA_DIR = 'data'
+  DOCS_DIR = 'docs'
+  NEWS_FILE = f'{DATA_DIR}/news.json'
