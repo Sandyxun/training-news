@@ -52,6 +52,18 @@ RSS_SOURCES = [
           'category': '培训行业',
           'description': '微信公众号'
       },
+      {
+          'name': '培训公众号3',
+          'url': 'https://rsshub.app/wechat/mp/homepage/MjM5MzU3NTk4Mw==',
+          'category': '培训行业',
+          'description': '微信公众号'
+      },
+      {
+          'name': '培训公众号4',
+          'url': 'https://rsshub.app/wechat/mp/homepage/MzA3MTkzNDczOQ==',
+          'category': '培训行业',
+          'description': '微信公众号'
+      },
 ]
 
 # 微信公众号配置（待添加biz参数）
