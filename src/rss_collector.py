@@ -28,7 +28,7 @@ class RSSCollector:
 
             articles = []
             # 获取最近7天的文章（临时测试）
-            week_ago = datetime.now() - timedelta(days=7)
+            month_ago = datetime.now() - timedelta(days=30)
 
             for entry in feed.entries[:10]:  # 只取最新10条
                 try:
@@ -55,7 +55,7 @@ class RSSCollector:
                     }
 
                     # 只添加最近7天的文章（临时测试）
-                    if published and published >= week_ago:
+                    if published and published >= month_ago:
                         articles.append(article)
                     elif not published:  # 如果没有时间，也添加
                         articles.append(article)
