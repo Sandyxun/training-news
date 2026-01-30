@@ -7,42 +7,41 @@ RSSHUB_BASE_URL = 'https://rsshub.app'  # RSSHub官方实例
 
 # RSS源配置 - 中英文混合，聚焦企业人才发展
 RSS_SOURCES = [
-      # === 可靠的中文源 ===
-      {
-          'name': '36氪-企业服务',
-          'url': 'https://36kr.com/feed/enterprise',
-          'category': '企业服务',
-          'description': '36氪企业服务频道'
-      },
-      {
-          'name': '虎嗅-商业',
-          'url': 'https://www.huxiu.com/rss/0.xml',
-          'category': '商业',
-          'description': '虎嗅商业资讯'
-      },
-      {
-          'name': '人人都是产品经理',
-          'url': 'http://www.woshipm.com/feed',
-          'category': '产品管理',
-          'description': '产品与运营'
-      },
+    # === 中文源（直接RSS） ===
+    {
+        'name': 'FT中文网-管理',
+        'url': 'https://www.ftchinese.com/rss/management',
+        'category': '管理',
+        'description': '金融时报中文网-管理专题'
+    },
+    {
+        'name': 'FT中文网-商学院',
+        'url': 'https://www.ftchinese.com/rss/mba',
+        'category': '商学院',
+        'description': '金融时报中文网-MBA与商学院'
+    },
 
-      # === 使用RSSHub聚合微信公众号 ===
-      {
-          'name': '培训杂志',
-          'url': 'https://rsshub.app/wechat/mp/homepage/MzA5MDc1ODQ0MA==',
-          'category': '培训行业',
-          'description': '培训杂志公众号'
-      },
+    # === 专业人才发展源（英文） ===
+    {
+        'name': 'ATD (人才发展协会)',
+        'url': 'https://www.td.org/rss-feeds/td-at-work',
+        'category': '人才发展',
+        'description': '全球最大的人才发展协会'
+    },
+    {
+        'name': 'Training Industry',
+        'url': 'https://trainingindustry.com/feed/',
+        'category': '培训产业',
+        'description': '企业培训与人才发展专业资讯'
+    },
+    {
+        'name': 'Chief Learning Officer',
+        'url': 'https://www.chieflearningofficer.com/feed/',
+        'category': '企业学习',
+        'description': '首席学习官的专业内容'
+    },
+]
 
-      # === 备用英文源（如果可以访问） ===
-      {
-          'name': 'Harvard Business Review',
-          'url': 'https://feeds.hbr.org/harvardbusiness',
-          'category': '管理',
-          'description': '哈佛商业评论'
-      },
-  ]
 # 微信公众号配置（待添加biz参数）
 # 填写你想订阅的公众号名称，稍后使用工具获取biz参数
 WECHAT_ACCOUNTS = [
@@ -73,3 +72,4 @@ WEBSITE_DESCRIPTION = '每天早上9点更新，汇聚企业人才发展、组�
 DATA_DIR = 'data'
 DOCS_DIR = 'docs'
 NEWS_FILE = f'{DATA_DIR}/news.json'
+
