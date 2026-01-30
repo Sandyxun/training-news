@@ -1,6 +1,6 @@
- """
+"""
   RSS采集器 - 优化版本
-  """
+"""
 
   import feedparser
   import json
@@ -37,19 +37,16 @@
 
               if feed.bozo:
                   print(f"  警告: RSS解析有问题 - {feed.bozo_exception}")
-                  # 即使有警告也继续尝试，因为有些feed虽然有小问题但仍可用
 
               if not feed.entries:
                   print(f"✗ {source_name}: 没有找到文章")
                   return []
 
               articles = []
-              # 放宽时间限制：改为最近30天
               month_ago = datetime.now() - timedelta(days=30)
 
-              for entry in feed.entries[:20]:  # 增加到20条
+              for entry in feed.entries[:20]:
                   try:
-                      # 解析发布时间（更宽松）
                       published = None
                       if hasattr(entry, 'published_parsed') and entry.published_parsed:
                           try:
@@ -62,23 +59,17 @@
                           except:
                               pass
 
-                      # 如果没有时间，使用当前时间
                       if not published:
                           published = datetime.now()
 
-                      # 生成唯一ID
-                      article_id = hashlib.md5(
-                          f"{entry.link}".encode('utf-8')
-                      ).hexdigest()
+                      article_id = hashlib.md5(f"{entry.link}".encode('utf-8')).hexdigest()
 
-                      # 获取摘要
                       summary = ''
                       if hasattr(entry, 'summary'):
                           summary = entry.summary
                       elif hasattr(entry, 'description'):
                           summary = entry.description
 
-                      # 清理HTML标签
                       import re
                       summary = re.sub(r'<[^>]+>', '', summary)
                       summary = summary.strip()[:300]
@@ -93,7 +84,6 @@
                           'category': category,
                       }
 
-                      # 只过滤30天前的文章
                       if published >= month_ago:
                           articles.append(article)
 
@@ -118,25 +108,16 @@
 
           all_articles = []
           for source in self.sources:
-              articles = self.fetch_rss(
-                  source['url'],
-                  source['name'],
-                  source['category']
-              )
+              articles = self.fetch_rss(source['url'], source['name'], source['category'])
               all_articles.extend(articles)
-              time.sleep(1)  # 添加延迟避免被限流
+              time.sleep(1)
 
-          # 去重（根据ID）
           unique_articles = {}
           for article in all_articles:
               if article['id'] not in unique_articles:
                   unique_articles[article['id']] = article
 
-          self.news_data = sorted(
-              unique_articles.values(),
-              key=lambda x: x['published'],
-              reverse=True
-          )
+          self.news_data = sorted(unique_articles.values(), key=lambda x: x['published'], reverse=True)
 
           print("=" * 50)
           print(f"采集完成！共获取 {len(self.news_data)} 篇不重复的文章")
@@ -167,7 +148,6 @@
       articles = collector.collect_all()
       collector.save_to_file()
 
-      # 打印前3条作为示例
       if articles:
           print("\n最新资讯预览:")
           for i, article in enumerate(articles[:3], 1):
