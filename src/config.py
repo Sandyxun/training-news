@@ -6,7 +6,7 @@
 RSSHUB_BASE_URL = 'https://rsshub.app'  # RSSHub官方实例
 
 # RSS源配置 - 中英文混合，聚焦企业人才发展
- RSS_SOURCES = [
+RSS_SOURCES = [
       # === 可靠的中文源 ===
       {
           'name': '36氪-企业服务',
