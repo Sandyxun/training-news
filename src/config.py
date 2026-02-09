@@ -5,65 +5,71 @@
 # RSSHub服务器地址（可选，如果官方实例不可用，可以自建或使用其他镜像）
 RSSHUB_BASE_URL = 'https://rsshub.app'  # RSSHub官方实例
 
-# RSS源配置 - 中英文混合，聚焦企业人才发展
+# RSS源配置 - 中文为主，聚焦企业人才发展和AI
 RSS_SOURCES = [
-    # === 中文源（直接RSS） ===
+    # === 科技商业媒体（中文）- 可用 ===
     {
-        'name': 'FT中文网-管理',
-        'url': 'https://www.ftchinese.com/rss/management',
-        'category': '管理',
-        'description': '金融时报中文网-管理专题'
+        'name': '36氪',
+        'url': 'https://36kr.com/feed',
+        'category': '科技商业',
+        'description': '科技创业媒体，关注创新与商业'
     },
     {
-        'name': 'FT中文网-商学院',
-        'url': 'https://www.ftchinese.com/rss/mba',
-        'category': '商学院',
-        'description': '金融时报中文网-MBA与商学院'
+        'name': '虎嗅网',
+        'url': 'https://www.huxiu.com/rss/0.xml',
+        'category': '科技商业',
+        'description': '科技财经媒体，深度商业分析'
+    },
+    {
+        'name': '钛媒体',
+        'url': 'https://www.tmtpost.com/rss.xml',
+        'category': '科技商业',
+        'description': '科技第一媒体，关注技术与商业变革'
     },
 
-    # === 专业人才发展源（英文） ===
+    # === AI 人工智能专题（中文）- 可用 ===
     {
-        'name': 'ATD (人才发展协会)',
-        'url': 'https://www.td.org/rss-feeds/td-at-work',
-        'category': '人才发展',
-        'description': '全球最大的人才发展协会'
+        'name': '机器之心',
+        'url': 'https://www.jiqizhixin.com/rss',
+        'category': 'AI',
+        'description': '专业的人工智能媒体和产业服务平台'
     },
     {
-        'name': 'Training Industry',
-        'url': 'https://trainingindustry.com/feed/',
-        'category': '培训产业',
-        'description': '企业培训与人才发展专业资讯'
+        'name': '量子位',
+        'url': 'https://www.qbitai.com/feed',
+        'category': 'AI',
+        'description': '人工智能内容平台，专注AI技术和应用'
     },
+
+    # === 技术媒体（中文）- 可用 ===
+    {
+        'name': 'InfoQ中文',
+        'url': 'https://www.infoq.cn/feed',
+        'category': '技术',
+        'description': '软件开发与技术领导力'
+    },
+
+    # === 企业学习和人才发展（英文）- 可用 ===
     {
         'name': 'Chief Learning Officer',
         'url': 'https://www.chieflearningofficer.com/feed/',
         'category': '企业学习',
         'description': '首席学习官的专业内容'
     },
+
+    # === AI 资讯（英文）- 可用 ===
     {
-          'name': '培训公众号1',
-          'url': 'https://rsshub.app/wechat/mp/homepage/MjM5Njk5Mzk3Mg==',
-          'category': '培训行业',
-          'description': '微信公众号'
-      },
-      {
-          'name': '培训公众号2',
-          'url': 'https://rsshub.app/wechat/mp/homepage/MjM5Mjk2MDY2MA==',
-          'category': '培训行业',
-          'description': '微信公众号'
-      },
-      {
-          'name': '培训公众号3',
-          'url': 'https://rsshub.app/wechat/mp/homepage/MjM5MzU3NTk4Mw==',
-          'category': '培训行业',
-          'description': '微信公众号'
-      },
-      {
-          'name': '培训公众号4',
-          'url': 'https://rsshub.app/wechat/mp/homepage/MzA3MTkzNDczOQ==',
-          'category': '培训行业',
-          'description': '微信公众号'
-      },
+        'name': 'MIT Technology Review - AI',
+        'url': 'https://www.technologyreview.com/topic/artificial-intelligence/feed/',
+        'category': 'AI',
+        'description': 'MIT科技评论AI频道'
+    },
+    {
+        'name': 'OpenAI Blog',
+        'url': 'https://openai.com/blog/rss.xml',
+        'category': 'AI',
+        'description': 'OpenAI官方博客'
+    },
 ]
 
 # 微信公众号配置（待添加biz参数）
@@ -89,11 +95,10 @@ EMAIL_CONFIG = {
 TIMEZONE = 'Asia/Shanghai'
 
 # 网页配置
-WEBSITE_TITLE = '企业人才发展每日资讯'
-WEBSITE_DESCRIPTION = '每天早上9点更新，汇聚企业人才发展、组织学习、培训管理最新动态'
+WEBSITE_TITLE = '企业人才发展与AI资讯'
+WEBSITE_DESCRIPTION = '每天更新，汇聚企业人才发展、组织学习、培训管理与人工智能最新动态'
 
 # 数据文件路径
 DATA_DIR = 'data'
 DOCS_DIR = 'docs'
 NEWS_FILE = f'{DATA_DIR}/news.json'
-

@@ -11,9 +11,18 @@ import hashlib
 
 
 class RSSCollector:
-    def __init__(self):
+    def __init__(self, max_articles=30, days_back=30):
+        """
+        初始化RSS采集器
+
+        Args:
+            max_articles: 每个源最多抓取的文章数量
+            days_back: 抓取最近多少天的文章
+        """
         self.sources = RSS_SOURCES
         self.news_data = []
+        self.max_articles = max_articles
+        self.days_back = days_back
 
     def fetch_rss(self, url, source_name, category):
         """
@@ -27,10 +36,10 @@ class RSSCollector:
                 print(f"警告: {source_name} RSS解析可能有问题")
 
             articles = []
-            # 获取最近7天的文章（临时测试）
-            month_ago = datetime.now() - timedelta(days=30)
+            # 获取最近N天的文章
+            cutoff_date = datetime.now() - timedelta(days=self.days_back)
 
-            for entry in feed.entries[:10]:  # 只取最新10条
+            for entry in feed.entries[:self.max_articles]:  # 获取配置的数量
                 try:
                     # 解析发布时间
                     published = None
@@ -54,8 +63,8 @@ class RSSCollector:
                         'category': category,
                     }
 
-                    # 只添加最近7天的文章（临时测试）
-                    if published and published >= month_ago:
+                    # 只添加最近N天的文章
+                    if published and published >= cutoff_date:
                         articles.append(article)
                     elif not published:  # 如果没有时间，也添加
                         articles.append(article)
@@ -64,11 +73,11 @@ class RSSCollector:
                     print(f"处理文章时出错: {str(e)}")
                     continue
 
-            print(f"✓ {source_name}: 采集到 {len(articles)} 篇文章")
+            print(f"[OK] {source_name}: 采集到 {len(articles)} 篇文章")
             return articles
 
         except Exception as e:
-            print(f"✗ {source_name} 采集失败: {str(e)}")
+            print(f"[FAIL] {source_name} 采集失败: {str(e)}")
             return []
 
     def collect_all(self):
@@ -135,4 +144,3 @@ if __name__ == '__main__':
         print(f"\n{i}. {article['title']}")
         print(f"   来源: {article['source']} | 分类: {article['category']}")
         print(f"   链接: {article['link']}")
-

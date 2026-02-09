@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>触发今日资讯推送</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 500px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: transform 0.3s;
+        }
+        .button:hover {
+            transform: scale(1.05);
+        }
+        .info {
+            margin-top: 30px;
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>📚 触发今日资讯推送</h1>
+        <p>如果今天早上没有收到邮件，点击下面的按钮手动触发</p>
+
+        <a href="https://github.com/Sandyxun/training-news/actions/workflows/daily_news.yml"
+           class="button"
+           target="_blank">
+           打开 GitHub Actions
+        </a>
+
+        <div class="info">
+            <p><strong>操作步骤：</strong></p>
+            <p>1. 点击上面的按钮打开页面</p>
+            <p>2. 点击右侧的 "Run workflow" 按钮</p>
+            <p>3. 再次点击绿色的 "Run workflow" 确认</p>
+            <p>4. 等待2-3分钟后检查邮箱</p>
+        </div>
+    </div>
+</body>
+</html>

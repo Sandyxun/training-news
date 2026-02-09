@@ -397,18 +397,18 @@ body {
             index_html = self.generate_index_html(news_data)
             with open(f'{self.docs_dir}/index.html', 'w', encoding='utf-8') as f:
                 f.write(index_html)
-            print(f"✓ 生成首页: {self.docs_dir}/index.html")
+            print(f"[OK] 生成首页: {self.docs_dir}/index.html")
 
             # 生成style.css
             css = self.generate_css()
             with open(f'{self.docs_dir}/style.css', 'w', encoding='utf-8') as f:
                 f.write(css)
-            print(f"✓ 生成样式: {self.docs_dir}/style.css")
+            print(f"[OK] 生成样式: {self.docs_dir}/style.css")
 
             return True
 
         except Exception as e:
-            print(f"✗ 生成网页失败: {str(e)}")
+            print(f"[FAIL] 生成网页失败: {str(e)}")
             return False
 
 
