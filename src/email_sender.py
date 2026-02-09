@@ -36,7 +36,7 @@ class EmailSender:
 
     def generate_html_email(self, news_data):
         """
-        生成HTML格式的邮件内容（按类别分组）
+        生成HTML格式的邮件内容（按类别分组，每类前5篇）
         """
         articles = news_data.get('articles', [])
         total = news_data.get('total', 0)
@@ -73,8 +73,17 @@ class EmailSender:
                 categorized_articles[mapped_cat] = []
             categorized_articles[mapped_cat].append(article)
 
-        # 统计各类别文章数
+        # 按发布时间排序（最新的排前面，作为热度指标），每类只保留前5篇
+        for cat_name in categorized_articles:
+            cat_articles = categorized_articles[cat_name]
+            # 按发布时间倒序排序
+            cat_articles.sort(key=lambda x: x['published'], reverse=True)
+            # 只保留前5篇
+            categorized_articles[cat_name] = cat_articles[:5]
+
+        # 统计各类别文章数（精选后的数量）
         category_counts = {cat: len(categorized_articles.get(cat, [])) for cat in category_mapping.keys()}
+        total_selected = sum(category_counts.values())
 
         html = f"""
         <!DOCTYPE html>
@@ -130,7 +139,7 @@ class EmailSender:
                     display: inline-block;
                     padding: 10px 20px;
                     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white;
+                    color: white !important;
                     text-decoration: none;
                     border-radius: 20px;
                     font-weight: 600;
@@ -140,6 +149,7 @@ class EmailSender:
                 .nav-button:hover {{
                     transform: translateY(-2px);
                     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                    color: white !important;
                 }}
                 .category-section {{
                     margin-bottom: 40px;
@@ -191,6 +201,15 @@ class EmailSender:
                     font-size: 11px;
                     margin-right: 8px;
                 }}
+                .hot-badge {{
+                    display: inline-block;
+                    background: #ff6b6b;
+                    color: white;
+                    padding: 2px 8px;
+                    border-radius: 10px;
+                    font-size: 11px;
+                    margin-right: 8px;
+                }}
                 .summary {{
                     color: #555;
                     line-height: 1.8;
@@ -229,7 +248,7 @@ class EmailSender:
             </div>
 
             <div class="stats">
-                <strong>📊 今日资讯: {total} 篇</strong> |
+                <strong>📊 今日精选: {total_selected} 篇</strong>（从 {total} 篇中筛选） |
                 更新时间: {datetime.fromisoformat(update_time).strftime('%Y-%m-%d %H:%M')}
             </div>
 
@@ -261,16 +280,19 @@ class EmailSender:
             <div class="category-section" id="{cat_info['id']}" style="--cat-color: {cat_info['color']}; --cat-color-light: {cat_info['color']}88;">
                 <div class="category-header">
                     <h2>{cat_info['icon']} {cat_name}</h2>
-                    <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">共 {len(cat_articles)} 篇文章</p>
+                    <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">精选 {len(cat_articles)} 篇热门文章</p>
                 </div>
                 """
 
                 for i, article in enumerate(cat_articles, 1):
                     published_time = datetime.fromisoformat(article['published']).strftime('%m-%d %H:%M')
+                    # 最新的文章标记为"热"
+                    hot_badge = '<span class="hot-badge">🔥 热</span>' if i == 1 else ''
                     html += f"""
                 <div class="article">
                     <h3>{i}. <a href="{article['link']}" target="_blank">{article['title']}</a></h3>
                     <div class="meta">
+                        {hot_badge}
                         <span class="original-category">{article['category']}</span>
                         <span>{article['source']}</span> ·
                         <span>{published_time}</span>
@@ -295,6 +317,7 @@ class EmailSender:
         html += """
             <div class="footer">
                 <p>🤖 本邮件由 GitHub Actions 自动生成并发送</p>
+                <p>📊 智能筛选48小时内热门资讯，每类精选前5篇</p>
                 <p>如需查看历史资讯，请访问项目网站</p>
             </div>
         </body>

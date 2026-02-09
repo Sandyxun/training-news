@@ -11,13 +11,13 @@ import hashlib
 
 
 class RSSCollector:
-    def __init__(self, max_articles=30, days_back=30):
+    def __init__(self, max_articles=30, days_back=2):
         """
         初始化RSS采集器
 
         Args:
             max_articles: 每个源最多抓取的文章数量
-            days_back: 抓取最近多少天的文章
+            days_back: 抓取最近多少天的文章（默认2天=48小时）
         """
         self.sources = RSS_SOURCES
         self.news_data = []
