@@ -36,11 +36,45 @@ class EmailSender:
 
     def generate_html_email(self, news_data):
         """
-        生成HTML格式的邮件内容
+        生成HTML格式的邮件内容（按类别分组）
         """
         articles = news_data.get('articles', [])
         total = news_data.get('total', 0)
         update_time = news_data.get('update_time', '')
+
+        # 定义类别映射和显示顺序
+        category_mapping = {
+            '人才发展': {'icon': '👥', 'color': '#667eea', 'id': 'talent'},
+            'AI应用': {'icon': '🤖', 'color': '#f093fb', 'id': 'ai-app'},
+            '科技商业': {'icon': '💼', 'color': '#4facfe', 'id': 'business'},
+            'AI技术': {'icon': '🔬', 'color': '#43e97b', 'id': 'ai-tech'},
+        }
+
+        # 将原始类别映射到新类别
+        def map_category(original_category):
+            category_map = {
+                '企业学习': '人才发展',
+                '人才发展': '人才发展',
+                '人力资源': '人才发展',
+                '管理': '人才发展',
+                '培训产业': '人才发展',
+                '商学院': '人才发展',
+                'AI': 'AI应用',  # AI类默认为应用
+                '技术': 'AI技术',  # 技术类为AI技术
+                '科技商业': '科技商业',
+            }
+            return category_map.get(original_category, '科技商业')
+
+        # 按新类别分组文章
+        categorized_articles = {}
+        for article in articles:
+            mapped_cat = map_category(article['category'])
+            if mapped_cat not in categorized_articles:
+                categorized_articles[mapped_cat] = []
+            categorized_articles[mapped_cat].append(article)
+
+        # 统计各类别文章数
+        category_counts = {cat: len(categorized_articles.get(cat, [])) for cat in category_mapping.keys()}
 
         html = f"""
         <!DOCTYPE html>
@@ -49,7 +83,7 @@ class EmailSender:
             <meta charset="utf-8">
             <style>
                 body {{
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif;
                     line-height: 1.6;
                     color: #333;
                     max-width: 800px;
@@ -81,46 +115,102 @@ class EmailSender:
                     text-align: center;
                     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                 }}
+                .nav-buttons {{
+                    background: white;
+                    padding: 20px;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    display: flex;
+                    gap: 10px;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                }}
+                .nav-button {{
+                    display: inline-block;
+                    padding: 10px 20px;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 20px;
+                    font-weight: 600;
+                    transition: transform 0.2s, box-shadow 0.2s;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }}
+                .nav-button:hover {{
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                }}
+                .category-section {{
+                    margin-bottom: 40px;
+                    scroll-margin-top: 20px;
+                }}
+                .category-header {{
+                    background: linear-gradient(135deg, var(--cat-color) 0%, var(--cat-color-light) 100%);
+                    color: white;
+                    padding: 20px;
+                    border-radius: 10px;
+                    margin-bottom: 15px;
+                    text-align: center;
+                }}
+                .category-header h2 {{
+                    margin: 0;
+                    font-size: 24px;
+                }}
                 .article {{
                     background: white;
                     padding: 20px;
                     margin-bottom: 15px;
                     border-radius: 8px;
-                    border-left: 4px solid #667eea;
+                    border-left: 4px solid var(--cat-color);
                     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-                    transition: transform 0.2s;
-                }}
-                .article:hover {{
-                    transform: translateX(5px);
                 }}
                 .article h3 {{
                     margin: 0 0 10px 0;
                     color: #2c3e50;
+                    font-size: 18px;
                 }}
                 .article h3 a {{
                     color: #2c3e50;
                     text-decoration: none;
                 }}
                 .article h3 a:hover {{
-                    color: #667eea;
+                    color: var(--cat-color);
                 }}
                 .meta {{
                     color: #7f8c8d;
                     font-size: 14px;
                     margin-bottom: 10px;
                 }}
-                .category {{
+                .original-category {{
                     display: inline-block;
-                    background: #667eea;
-                    color: white;
-                    padding: 2px 10px;
-                    border-radius: 12px;
-                    font-size: 12px;
-                    margin-right: 10px;
+                    background: #e8e8e8;
+                    color: #666;
+                    padding: 2px 8px;
+                    border-radius: 10px;
+                    font-size: 11px;
+                    margin-right: 8px;
                 }}
                 .summary {{
                     color: #555;
-                    line-height: 1.6;
+                    line-height: 1.8;
+                }}
+                .back-to-top {{
+                    text-align: center;
+                    margin: 20px 0;
+                }}
+                .back-to-top a {{
+                    display: inline-block;
+                    padding: 10px 30px;
+                    background: #667eea;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 20px;
+                    font-weight: 600;
+                    transition: background 0.3s;
+                }}
+                .back-to-top a:hover {{
+                    background: #5568d3;
                 }}
                 .footer {{
                     text-align: center;
@@ -132,31 +222,68 @@ class EmailSender:
             </style>
         </head>
         <body>
+            <div id="top"></div>
             <div class="header">
-                <h1>📚 企业人才发展每日资讯</h1>
-                <p>每天为你精选人才发展、培训管理相关内容</p>
+                <h1>📚 企业人才发展与AI资讯</h1>
+                <p>每天为你精选人才发展、AI应用、科技商业最新动态</p>
             </div>
 
             <div class="stats">
                 <strong>📊 今日资讯: {total} 篇</strong> |
                 更新时间: {datetime.fromisoformat(update_time).strftime('%Y-%m-%d %H:%M')}
             </div>
+
+            <div class="nav-buttons">
         """
 
-        # 添加文章
-        if articles:
-            for i, article in enumerate(articles, 1):
-                published_time = datetime.fromisoformat(article['published']).strftime('%m-%d %H:%M')
+        # 添加导航按钮
+        for cat_name, cat_info in category_mapping.items():
+            count = category_counts.get(cat_name, 0)
+            if count > 0:
                 html += f"""
+                <a href="#{cat_info['id']}" class="nav-button">
+                    {cat_info['icon']} {cat_name} ({count}篇)
+                </a>
+                """
+
+        html += """
+            </div>
+        """
+
+        # 添加各类别的文章
+        if articles:
+            for cat_name, cat_info in category_mapping.items():
+                cat_articles = categorized_articles.get(cat_name, [])
+                if not cat_articles:
+                    continue
+
+                html += f"""
+            <div class="category-section" id="{cat_info['id']}" style="--cat-color: {cat_info['color']}; --cat-color-light: {cat_info['color']}88;">
+                <div class="category-header">
+                    <h2>{cat_info['icon']} {cat_name}</h2>
+                    <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">共 {len(cat_articles)} 篇文章</p>
+                </div>
+                """
+
+                for i, article in enumerate(cat_articles, 1):
+                    published_time = datetime.fromisoformat(article['published']).strftime('%m-%d %H:%M')
+                    html += f"""
                 <div class="article">
                     <h3>{i}. <a href="{article['link']}" target="_blank">{article['title']}</a></h3>
                     <div class="meta">
-                        <span class="category">{article['category']}</span>
+                        <span class="original-category">{article['category']}</span>
                         <span>{article['source']}</span> ·
                         <span>{published_time}</span>
                     </div>
                     <div class="summary">{article['summary']}</div>
                 </div>
+                    """
+
+                html += """
+                <div class="back-to-top">
+                    <a href="#top">⬆️ 返回顶部</a>
+                </div>
+            </div>
                 """
         else:
             html += """
