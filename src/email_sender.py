@@ -255,11 +255,11 @@ class EmailSender:
             <div class="nav-buttons">
         """
 
-        # 添加导航按钮
+        # 添加导航按钮（所有分类都显示）
         for cat_name, cat_info in category_mapping.items():
             count = category_counts.get(cat_name, 0)
-            if count > 0:
-                html += f"""
+            # 所有分类都显示按钮，没有文章的显示(0篇)
+            html += f"""
                 <a href="#{cat_info['id']}" class="nav-button">
                     {cat_info['icon']} {cat_name} ({count}篇)
                 </a>
@@ -269,26 +269,28 @@ class EmailSender:
             </div>
         """
 
-        # 添加各类别的文章
-        if articles:
+        # 添加各类别的文章（所有分类都显示，即使没有内容）
+        if True:  # 始终显示所有分类
             for cat_name, cat_info in category_mapping.items():
                 cat_articles = categorized_articles.get(cat_name, [])
-                if not cat_articles:
-                    continue
 
                 html += f"""
             <div class="category-section" id="{cat_info['id']}" style="--cat-color: {cat_info['color']}; --cat-color-light: {cat_info['color']}88;">
                 <div class="category-header">
                     <h2>{cat_info['icon']} {cat_name}</h2>
-                    <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">精选 {len(cat_articles)} 篇热门文章</p>
+                    <p style="margin: 5px 0 0 0; opacity: 0.9; font-size: 14px;">
+                        {f'精选 {len(cat_articles)} 篇热门文章' if cat_articles else '该分类暂无最新资讯'}
+                    </p>
                 </div>
                 """
 
-                for i, article in enumerate(cat_articles, 1):
-                    published_time = datetime.fromisoformat(article['published']).strftime('%m-%d %H:%M')
-                    # 最新的文章标记为"热"
-                    hot_badge = '<span class="hot-badge">🔥 热</span>' if i == 1 else ''
-                    html += f"""
+                if cat_articles:
+                    # 有文章，正常显示
+                    for i, article in enumerate(cat_articles, 1):
+                        published_time = datetime.fromisoformat(article['published']).strftime('%m-%d %H:%M')
+                        # 最新的文章标记为"热"
+                        hot_badge = '<span class="hot-badge">🔥 热</span>' if i == 1 else ''
+                        html += f"""
                 <div class="article">
                     <h3>{i}. <a href="{article['link']}" target="_blank">{article['title']}</a></h3>
                     <div class="meta">
@@ -299,6 +301,14 @@ class EmailSender:
                     </div>
                     <div class="summary">{article['summary']}</div>
                 </div>
+                        """
+                else:
+                    # 没有文章，显示提示信息
+                    html += """
+                <div class="article" style="text-align: center; padding: 40px 20px; background: #f9f9f9;">
+                    <p style="font-size: 16px; color: #999; margin: 0;">📭 该分类48小时内暂无最新资讯</p>
+                    <p style="font-size: 14px; color: #bbb; margin: 10px 0 0 0;">请关注其他分类或等待下次更新</p>
+                </div>
                     """
 
                 html += """
@@ -307,12 +317,6 @@ class EmailSender:
                 </div>
             </div>
                 """
-        else:
-            html += """
-            <div class="article">
-                <p>今天暂无新资讯</p>
-            </div>
-            """
 
         html += """
             <div class="footer">
